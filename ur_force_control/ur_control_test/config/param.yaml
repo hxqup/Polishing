@@ -1,0 +1,6 @@
+int_param:
+  - 1
+  - 2
+double_param: 0.5
+bool_param: false  # bool parameter
+str_param: test
