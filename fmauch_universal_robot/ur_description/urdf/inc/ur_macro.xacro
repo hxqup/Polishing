@@ -359,15 +359,15 @@
 
     <link name="${prefix}tool0_inertial">
       <visual>
-    <origin xyz="0 0 0.10" />
+    <origin xyz="0 0 0.20" />
     <geometry>
-      <cylinder length="0.2" radius="0.036"/>
+      <cylinder length="0.4" radius="0.036"/>
     </geometry>
         </visual>
         <collision>
-    <origin xyz="0 0 0.10" />
+    <origin xyz="0 0 0.20" />
     <geometry>
-      <cylinder length="0.2" radius="0.036"/>
+      <cylinder length="0.4" radius="0.036"/>
     </geometry>
         </collision>
         <inertial>

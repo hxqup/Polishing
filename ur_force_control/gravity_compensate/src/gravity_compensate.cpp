@@ -106,8 +106,8 @@ void GravityCompensate::WrenchsubCallback(const geometry_msgs::WrenchStamped& ms
     geometry_msgs::WrenchStamped tool_pub_msg,base_pub_msg;
     tool_pub_msg.header.stamp=ros::Time::now();
     tool_pub_msg.header.frame_id="tool0";
-    tool_pub_msg.wrench.force.x=wrench_tool(0);
-    tool_pub_msg.wrench.force.y=wrench_tool(1);
+    tool_pub_msg.wrench.force.x=wrench_tool(0) + 1;
+    tool_pub_msg.wrench.force.y=wrench_tool(1) - 2;
     tool_pub_msg.wrench.force.z=wrench_tool(2);
     tool_pub_msg.wrench.torque.x=wrench_tool(3);
     tool_pub_msg.wrench.torque.y=wrench_tool(4);

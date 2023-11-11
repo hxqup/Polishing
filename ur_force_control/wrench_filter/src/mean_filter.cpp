@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     wrench_sum.resize(6,0);
 
     wrench_pub = nh.advertise<geometry_msgs::WrenchStamped>("/filtered_wrench", 1000);
-    ros::Subscriber wrench_sub = nh.subscribe("/wrench", 1000, WrenchsubCallback);
+    ros::Subscriber wrench_sub = nh.subscribe("/robotiq_ft_wrench", 1000, WrenchsubCallback);
     ros::spin();
     return 0;
 }

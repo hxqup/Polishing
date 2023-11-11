@@ -100,7 +100,6 @@ Eigen::Matrix3d GravityIdentify::quaternion2Rotation(double x,double y,double z,
 
 void GravityIdentify::WrenchsubCallback(const geometry_msgs::WrenchStamped& msg){
     if(flag){
-        std::cout<<"sensor_point is "<<sensor_point<<std::endl;
         sensor_point++;
         wrenchb_temp[0] += msg.wrench.force.x;
         wrenchb_temp[1] += msg.wrench.force.y;
@@ -108,12 +107,13 @@ void GravityIdentify::WrenchsubCallback(const geometry_msgs::WrenchStamped& msg)
         wrenchb_temp[3] += msg.wrench.torque.x;
         wrenchb_temp[4] += msg.wrench.torque.y;
         wrenchb_temp[5] += msg.wrench.torque.z;
-        if(sensor_point==100){
-            std::cout<<"average started"<<std::endl;
+        if(sensor_point==5000){
             // calculate 100 times force average date
             for(int i=0;i<6;i++){
                 wrenchb_temp[i]/=100;
+                std::cout<<wrenchb_temp[i]<<" ";
             }
+            std::cout<<std::endl;
             Eigen::Matrix<double,3,1> M_temp;
             Eigen::Matrix<double,3,1> F_temp;
             M_temp<<wrenchb_temp[3],wrenchb_temp[4],wrenchb_temp[5];
@@ -133,7 +133,6 @@ void GravityIdentify::WrenchsubCallback(const geometry_msgs::WrenchStamped& msg)
 
 //利用tf_listener 查询机器人末端相对于基座的位姿
 void GravityIdentify::getSE3(){
-    std::cout<<"calculate R started"<<std::endl;
     tf::StampedTransform transform;
     try{
         listener.lookupTransform("base", "tool0",ros::Time(0), transform);
@@ -149,7 +148,6 @@ void GravityIdentify::getSE3(){
     double w=transform.getRotation().getW();
 
     R.block(3*index,0,3,3)=quaternion2Rotation(x,y,z,w).transpose();
-    std::cout<<"calculate R finished"<<std::endl;
 }
 
 //获取向量对应的反对称矩阵
@@ -163,7 +161,6 @@ Eigen::Matrix3d GravityIdentify::getAntisymmetric(Eigen::Matrix<double,3,1> v){
 
 //计算负载的质心
 void GravityIdentify::calculateP(){
-    std::cout<<"calculate P started"<<std::endl;
     Eigen::Matrix<double,pos_num*3,6> E;
     Eigen::Matrix<double,3,3> I33=Eigen::Matrix3d::Identity();  
     for(int i=0;i<pos_num;i++){       
@@ -192,7 +189,7 @@ int GravityIdentify::urMove()
     std::string pos="pose";
 
     // 修改目标容差值
-    double new_tolerance = 0.001;  // 替换为你想设置的目标容差值
+    double new_tolerance = 0.01;  // 替换为你想设置的目标容差值
 
 
     // 设置新的目标容差
@@ -202,12 +199,10 @@ int GravityIdentify::urMove()
         move_group.setNamedTarget(pos+std::to_string(i));
         bool plan_success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
         if(!plan_success) return -1;
-        std::cout<<"plan success："<<i<<std::endl;
         bool execute_success = (move_group.execute(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
         if(!execute_success) return -1;
         ros::Duration(5).sleep();
         flag=true;
-        std::cout<<"execute success:"<<i<<std::endl;
         while(flag) continue;
         ros::Duration(5).sleep();
         index++;

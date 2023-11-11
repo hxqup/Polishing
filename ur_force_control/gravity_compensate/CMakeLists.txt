@@ -103,6 +103,22 @@ target_link_libraries(contact_frame_wrench_node
   ${catkin_LIBRARIES}
 )
 
+add_executable(move2plane src/move2Plane.cpp)
+target_link_libraries(move2plane
+  ${catkin_LIBRARIES})
+
+add_executable(readForce src/readForce.cpp)
+target_link_libraries(readForce
+  ${catkin_LIBRARIES})
+
+
+add_executable(readRawForce src/readRowdata.cpp)
+target_link_libraries(readRawForce
+  ${catkin_LIBRARIES})
+
+add_executable(move src/move.cpp)
+target_link_libraries(move
+  ${catkin_LIBRARIES})
 
 
 
